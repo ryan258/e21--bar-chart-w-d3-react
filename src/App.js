@@ -1,5 +1,5 @@
 import React, { useState, useCallback, useEffect } from 'react'
-import { csv, arc, pie } from 'd3'
+import { csv, arc, pie, scaleBand, scaleLinear, max } from 'd3'
 // import { message } from './utils/message'
 // useCallback - good for adding event listeners only once
 // - arg0 - function you want to control
@@ -15,14 +15,36 @@ const App = () => {
   const [data, setData] = useState(null)
 
   useEffect(() => {
-    csv(csvUrl).then(setData)
+    const row = (d) => {
+      d.Population = +d['2020']
+      return d
+    }
+    csv(csvUrl, row).then((data) => {
+      setData(data.slice(0, 10))
+    })
   }, [])
 
   if (!data) {
     return <pre>'Loading...'</pre>
   }
 
-  return <svg width={width} height={height}></svg>
+  console.log(data[0])
+
+  const yScale = scaleBand()
+    .domain(data.map((d) => d.Country))
+    .range([0, height])
+
+  const xScale = scaleLinear()
+    .domain([0, max(data, (d) => d.Population)])
+    .range([0, width])
+
+  return (
+    <svg width={width} height={height}>
+      {data.map((d) => (
+        <rect x={0} y={yScale(d.Country)} width={xScale(d.Population)} height={yScale.bandwidth()}></rect>
+      ))}
+    </svg>
+  )
 }
 
 export default App
