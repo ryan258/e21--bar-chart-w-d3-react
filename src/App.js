@@ -8,12 +8,8 @@ import './App.css'
 
 const csvUrl = 'https://gist.githubusercontent.com/ryan258/1a29d0b1d8c05e2d2f24f654a8ae515e/raw/ab8cc988df7c5ce40e6758af308fec4f129fc51e/UN_Population_2019.csv'
 
-const width = 1500
-const height = 1500
-const centerX = width / 2
-const centerY = height / 2
-
-const pieArc = arc().innerRadius(0).outerRadius(width)
+const width = 960
+const height = 500
 
 const App = () => {
   const [data, setData] = useState(null)
@@ -26,33 +22,7 @@ const App = () => {
     return <pre>'Loading...'</pre>
   }
 
-  // console.log(data[0])
-
-  const colorPie = pie().value(1)
-
-  return (
-    <svg width={width} height={height}>
-      <g transform={`translate(${centerX}, ${centerY})`}>
-        {
-          colorPie(data).map((d) => (
-            <path fill={d.data['RGB hex value']} d={pieArc(d)} />
-          ))
-
-          /* data.map((d, i) => (
-          <path
-            key={i}
-            fill={d['RGB hex value']}
-            d={pieArc({
-              startAngle: (i / data.length) * 2 * Math.PI,
-              endAngle: ((i + 1) / data.length) * 2 * Math.PI
-            })
-            }
-          />
-        )) */
-        }
-      </g>
-    </svg>
-  )
+  return <svg width={width} height={height}></svg>
 }
 
 export default App
