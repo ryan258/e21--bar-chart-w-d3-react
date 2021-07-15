@@ -10,6 +10,12 @@ const csvUrl = 'https://gist.githubusercontent.com/ryan258/1a29d0b1d8c05e2d2f24f
 
 const width = 960
 const height = 500
+const margin = {
+  top: 20,
+  right: 20,
+  bottom: 20,
+  left: 20
+}
 
 const App = () => {
   const [data, setData] = useState(null)
@@ -30,19 +36,24 @@ const App = () => {
 
   console.log(data[0])
 
+  const innerHeight = height - margin.top - margin.bottom
+  const innerWidth = width - margin.right - margin.left
+
   const yScale = scaleBand()
     .domain(data.map((d) => d.Country))
-    .range([0, height])
+    .range([0, innerHeight])
 
   const xScale = scaleLinear()
     .domain([0, max(data, (d) => d.Population)])
-    .range([0, width])
+    .range([0, innerWidth])
 
   return (
     <svg width={width} height={height}>
-      {data.map((d) => (
-        <rect x={0} y={yScale(d.Country)} width={xScale(d.Population)} height={yScale.bandwidth()}></rect>
-      ))}
+      <g transform={`translate(${margin.left}, ${margin.top})`}>
+        {data.map((d) => (
+          <rect x={0} y={yScale(d.Country)} width={xScale(d.Population)} height={yScale.bandwidth()}></rect>
+        ))}
+      </g>
     </svg>
   )
 }
