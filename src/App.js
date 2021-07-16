@@ -26,17 +26,18 @@ const App = () => {
     return <pre>'Loading...'</pre>
   }
 
-  console.log(data[0])
+  // console.log(data[0])
 
   const innerHeight = height - margin.top - margin.bottom
   const innerWidth = width - margin.right - margin.left
 
-  const yScale = scaleBand()
-    .domain(data.map((d) => d.Country))
-    .range([0, innerHeight])
+  const yValue = (d) => d.Country
+  const xValue = (d) => d.Population
+
+  const yScale = scaleBand().domain(data.map(yValue)).range([0, innerHeight])
 
   const xScale = scaleLinear()
-    .domain([0, max(data, (d) => d.Population)])
+    .domain([0, max(data, xValue)])
     .range([0, innerWidth])
 
   // Fortunately scales can tell us their ticks
@@ -48,7 +49,7 @@ const App = () => {
         {/* use the tick generation logic */}
         <AxisBottom xScale={xScale} innerHeight={innerHeight} />
         <AxisLeft yScale={yScale} />
-        <Marks data={data} xScale={xScale} yScale={yScale} />
+        <Marks data={data} xScale={xScale} yScale={yScale} xValue={xValue} yValue={yValue} />
       </g>
     </svg>
   )
