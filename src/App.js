@@ -1,5 +1,5 @@
-import React, { useState, useCallback, useEffect } from 'react'
-import { csv, arc, pie, scaleBand, scaleLinear, max } from 'd3'
+import React, { useState, useEffect } from 'react'
+import { csv, scaleBand, scaleLinear, max } from 'd3'
 // import { message } from './utils/message'
 // useCallback - good for adding event listeners only once
 // - arg0 - function you want to control
@@ -14,7 +14,7 @@ const margin = {
   top: 20,
   right: 20,
   bottom: 20,
-  left: 20
+  left: 200
 }
 
 const App = () => {
@@ -47,11 +47,44 @@ const App = () => {
     .domain([0, max(data, (d) => d.Population)])
     .range([0, innerWidth])
 
+  // Fortunately scales can tell us their ticks
+  // console.log(xScale.ticks())
+
   return (
     <svg width={width} height={height}>
       <g transform={`translate(${margin.left}, ${margin.top})`}>
+        {/* use the tick generation logic */}
+        {xScale.ticks().map((tickValue) => (
+          <g key={tickValue} transform={`translate(${xScale(tickValue)}, 0)`}>
+            <line
+              // x1={0}
+              // y1={0}
+              // x2={0}
+              y2={innerHeight}
+              stroke="black"
+            />
+            <text //
+              y={innerHeight + 3}
+              dy=".71em"
+              style={{ textAnchor: 'middle' }}
+            >
+              {tickValue}
+            </text>
+          </g>
+        ))}
+        {yScale.domain().map((tickValue) => (
+          <text //
+            key={tickValue}
+            style={{ textAnchor: 'end' }}
+            x={-3}
+            y={yScale(tickValue) + yScale.bandwidth() / 2}
+            dy=".32em"
+          >
+            {tickValue}
+          </text>
+        ))}
         {data.map((d) => (
-          <rect x={0} y={yScale(d.Country)} width={xScale(d.Population)} height={yScale.bandwidth()}></rect>
+          <rect key={d.Country} x={0} y={yScale(d.Country)} width={xScale(d.Population)} height={yScale.bandwidth()}></rect>
         ))}
       </g>
     </svg>
