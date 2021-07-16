@@ -1,14 +1,18 @@
 import React from 'react'
 
-const Marks = ({ data, xScale, yScale, xValue, yValue }) =>
+const Marks = ({ data, xScale, yScale, xValue, yValue, tooltipFormat }) =>
   data.map((d) => (
     <rect //
-      key={yValue(d)}
       x={0}
       y={yScale(yValue(d))}
       width={xScale(xValue(d))}
       height={yScale.bandwidth()}
-    ></rect>
+      key={yValue(d)}
+      className="mark"
+    >
+      {/* make a simple tooltip */}
+      <title>{tooltipFormat(xValue(d))}</title>
+    </rect>
   ))
 
 export default Marks
